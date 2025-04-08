@@ -23,5 +23,11 @@ COPY --from=build /app/build/libs/*.jar app.jar
 # Copy the subreddits.csv file from the input directory
 COPY input/subreddits.csv /app/input/subreddits.csv
 
+ENV OUTPUT_TOPIC="subreddits"
+ENV BOOTSTRAP_SERVERS="broker-1:19092, broker-2:19092, broker-3:19092"
+ENV CLIENT_ID="subreddits-producer"
+ENV ACKS="1"
+ENV INPUT_FILE="input/subreddits.csv"
+
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -22,7 +22,7 @@ public class ProducerApplication {
     private static final Logger logger = LoggerFactory.getLogger(ProducerApplication.class);
 
     private final Producer<String, String> producer;
-    final String topic = "subreddits";
+    final String topic = System.getenv().getOrDefault("OUTPUT_TOPIC", "subreddits");
 
     public ProducerApplication(Properties properties) {
         this.producer = new KafkaProducer<>(properties);
@@ -34,19 +34,21 @@ public class ProducerApplication {
 
     public static void main(String[] args) {
         final Properties producerProperties = new Properties() {{
-            put(BOOTSTRAP_SERVERS_CONFIG, "broker-1:19092, broker-2:19092, broker-3:19092");
+            put(BOOTSTRAP_SERVERS_CONFIG, System.getenv()
+                    .getOrDefault("BOOTSTRAP_SERVERS", "broker-1:19092, broker-2:19092, broker-3:19092"));
             put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
             put(VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-            put(CLIENT_ID_CONFIG, "subreddits-producer");
-            put(ACKS_CONFIG, "1");
+            put(CLIENT_ID_CONFIG, System.getenv().getOrDefault("CLIENT_ID", "subreddits-producer"));
+            put(ACKS_CONFIG, System.getenv().getOrDefault("ACKS", "1"));
         }};
 
 
-        String filePath = "input/subreddits.csv";
+        String filePath = System.getenv().getOrDefault("INPUT_FILE", "input/subreddits.csv");
 
         final ProducerApplication producerApp = new ProducerApplication(producerProperties);
 
         try {
+            logger.info("Sending subreddits events to kafka topic: {}.", producerApp.getTopic());
             List<String> linesToProduce = Files.readAllLines(Paths.get(filePath));
             linesToProduce.stream()
                     .skip(1)
