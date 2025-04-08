@@ -1,0 +1,84 @@
+package com.example;
+
+import org.apache.kafka.clients.producer.*;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+
+import static org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG;
+import static org.apache.kafka.clients.producer.ProducerConfig.*;
+import static org.apache.kafka.clients.producer.ProducerConfig.ACKS_CONFIG;
+
+/**
+ * @author Oleksandr Havrylenko
+ **/
+public class ProducerApplication {
+    private static final Logger logger = LoggerFactory.getLogger(ProducerApplication.class);
+
+    private final Producer<String, String> producer;
+    final String topic = "subreddits";
+
+    public ProducerApplication(Properties properties) {
+        this.producer = new KafkaProducer<>(properties);
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public static void main(String[] args) {
+        final Properties producerProperties = new Properties() {{
+            put(BOOTSTRAP_SERVERS_CONFIG, "localhost:29092, localhost:39092, localhost:49092");
+            put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+            put(VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+            put(CLIENT_ID_CONFIG, "my-producer");
+            put(ACKS_CONFIG, "1");
+        }};
+
+
+        String filePath = "resources/input/subreddits.csv";
+
+        final ProducerApplication producerApp = new ProducerApplication(producerProperties);
+
+        try {
+            List<String> linesToProduce = Files.readAllLines(Paths.get(filePath));
+            linesToProduce.stream()
+                    .skip(1)
+                    .map(line -> producerApp.createProducerRecord(line))
+                    .forEach(producerApp::sendEvent);
+
+            logger.info("Produced {} events to kafka topic: {}.", linesToProduce.size(), producerApp.getTopic());
+
+        } catch (IOException e) {
+            logger.error("Error reading file {} due to ", filePath, e);
+        } finally {
+            logger.info("ProducerApp shutdown ");
+            producerApp.shutdown();
+        }
+
+    }
+
+    public ProducerRecord<String, String> createProducerRecord(final String line) {
+        return new ProducerRecord<>(this.topic, line);
+    }
+
+    public Future<RecordMetadata> sendEvent(final ProducerRecord<String, String> record) {
+        return producer.send(record);
+    }
+
+    public Future<RecordMetadata> sendEvent(final ProducerRecord<String, String> record, final Callback callback) {
+        return producer.send(record, callback);
+    }
+
+    public void shutdown() {
+        producer.close();
+    }
+}
