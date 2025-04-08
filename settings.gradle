@@ -1,1 +1,3 @@
 rootProject.name = 'streaming-with-kafka'
+
+include 'kafka-producer'

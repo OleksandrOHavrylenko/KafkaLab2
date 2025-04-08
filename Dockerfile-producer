@@ -7,8 +7,8 @@ COPY gradlew .
 COPY gradle ./gradle
 
 # Copy the build configuration and source code
-COPY build.gradle .
-COPY src ./src
+COPY /kafka-producer/build.gradle .
+COPY /kafka-producer/src ./src
 
 # Build the application
 RUN ./gradlew shadowJar
