@@ -42,7 +42,7 @@ jar {
     manifest {
         attributes(
                 "Class-Path": configurations.compileClasspath.collect { it.getName() }.join(" "),
-                "Main-Class": "com.example.Producer"
+                "Main-Class": "com.example.ProducerApplication"
         )
     }
 }

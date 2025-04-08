@@ -11,11 +11,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 import static org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.*;
-import static org.apache.kafka.clients.producer.ProducerConfig.ACKS_CONFIG;
 
 /**
  * @author Oleksandr Havrylenko
@@ -36,7 +34,7 @@ public class ProducerApplication {
 
     public static void main(String[] args) {
         final Properties producerProperties = new Properties() {{
-            put(BOOTSTRAP_SERVERS_CONFIG, "localhost:29092, localhost:39092, localhost:49092");
+            put(BOOTSTRAP_SERVERS_CONFIG, "broker-1:19092, broker-2:19092, broker-3:19092");
             put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
             put(VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
             put(CLIENT_ID_CONFIG, "subreddits-producer");
@@ -44,7 +42,7 @@ public class ProducerApplication {
         }};
 
 
-        String filePath = "C:\\Users\\Hawk\\IdeaProjects\\StreamingWithKafka\\src\\main\\resources\\input\\subreddits.csv";
+        String filePath = "input/subreddits.csv";
 
         final ProducerApplication producerApp = new ProducerApplication(producerProperties);
 
@@ -52,7 +50,7 @@ public class ProducerApplication {
             List<String> linesToProduce = Files.readAllLines(Paths.get(filePath));
             linesToProduce.stream()
                     .skip(1)
-                    .map(line -> producerApp.createProducerRecord(line))
+                    .map(producerApp::createProducerRecord)
                     .forEach(producerApp::sendEvent);
 
             logger.info("Produced {} events to kafka topic: {}.", linesToProduce.size(), producerApp.getTopic());
