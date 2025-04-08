@@ -33,7 +33,8 @@ repositories {
 apply plugin: "com.github.johnrengelman.shadow"
 
 dependencies {
-    implementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.3'
+    implementation "org.slf4j:slf4j-api:2.0.16"
+    implementation "ch.qos.logback:logback-classic:1.5.16"
     implementation group: 'org.apache.kafka', name: 'kafka-clients', version: '4.0.0'
 }
 

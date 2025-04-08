@@ -39,12 +39,12 @@ public class ProducerApplication {
             put(BOOTSTRAP_SERVERS_CONFIG, "localhost:29092, localhost:39092, localhost:49092");
             put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
             put(VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-            put(CLIENT_ID_CONFIG, "my-producer");
+            put(CLIENT_ID_CONFIG, "subreddits-producer");
             put(ACKS_CONFIG, "1");
         }};
 
 
-        String filePath = "resources/input/subreddits.csv";
+        String filePath = "C:\\Users\\Hawk\\IdeaProjects\\StreamingWithKafka\\src\\main\\resources\\input\\subreddits.csv";
 
         final ProducerApplication producerApp = new ProducerApplication(producerProperties);
 
