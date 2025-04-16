@@ -29,7 +29,7 @@ public class ProcessorApplication {
 
     private final Consumer<String, String> consumer;
 
-    final String outputTopic = System.getenv().getOrDefault("OUTPUT_TOPIC", "subreddits");
+    final String outputTopic = System.getenv().getOrDefault("OUTPUT_TOPIC", "results");
     final static String OUTPUT_FILE_PATH = System.getenv().getOrDefault("OUTPUT_FILE_PATH", "output/reddit-output.csv");
 
     public ProcessorApplication(Properties properties) {
