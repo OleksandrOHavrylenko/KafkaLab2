@@ -1,6 +1,6 @@
 rootProject.name = 'streaming-with-kafka'
 
 include 'kafka-reddits-generator'
-include 'kafka-processor'
+include 'kafka-reddits-processor'
 include 'kafka-reddits-report'
 
