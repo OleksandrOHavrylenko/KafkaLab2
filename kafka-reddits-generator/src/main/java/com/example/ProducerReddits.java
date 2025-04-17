@@ -21,7 +21,7 @@ public class ProducerReddits {
     private final String topic = System.getenv().getOrDefault("OUTPUT_TOPIC", "subreddits");
     private final String filePath = System.getenv().getOrDefault("INPUT_FILE", "input/subreddits.csv");
 
-    public ProducerReddits(Properties properties) {
+    public ProducerReddits(final Properties properties) {
         this.producer = new KafkaProducer<>(properties);;
     }
 

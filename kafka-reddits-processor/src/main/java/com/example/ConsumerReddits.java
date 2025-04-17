@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.model.Metric;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -20,17 +21,19 @@ import java.util.Properties;
 /**
  * @author Oleksandr Havrylenko
  **/
-public class ProcessorReddits {
-    private static final Logger logger = LoggerFactory.getLogger(ProcessorReddits.class);
+public class ConsumerReddits {
+    private static final Logger logger = LoggerFactory.getLogger(ConsumerReddits.class);
     final static String OUTPUT_FILE_PATH = System.getenv().getOrDefault("OUTPUT_FILE_PATH", "output/reddit-output.csv");
 
-    final String outputTopic = System.getenv().getOrDefault("OUTPUT_TOPIC", "results");
-    final String inputTopic = System.getenv().getOrDefault("INPUT_TOPIC", "subreddits");
+    private final String inputTopic = System.getenv().getOrDefault("INPUT_TOPIC", "subreddits");
+    private final String testName = System.getenv().getOrDefault("TEST_NAME", "test");
 
     private final Consumer<String, String> consumer;
+    private final ProducerMetrics producerMetrics;
 
-    public ProcessorReddits(Properties properties) {
+    public ConsumerReddits(final Properties properties, final ProducerMetrics producerMetrics) {
         this.consumer = new KafkaConsumer<>(properties);
+        this.producerMetrics = producerMetrics;
     }
 
     public void runConsume() {
@@ -61,8 +64,8 @@ public class ProcessorReddits {
                 long timeDuration = System.nanoTime() - startTime;
                 double throughputMB = ((double) recordSizeBytes * 1_000_000_000.0) / (1024 * timeDuration);
 
-                logger.info("Max latency: {}ms", maxLatencyNanos / 1_000_000.0);
-                logger.info("Throughput : {}MB/s", throughputMB);
+                producerMetrics.sendEvent(new Metric(testName, recordSizeBytes, timeDuration, maxLatencyNanos));
+
             }
         } catch (Exception e) {
             logger.error("Interrupted exception: ", e);
