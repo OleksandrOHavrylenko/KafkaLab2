@@ -67,7 +67,9 @@ public class GeneratorApplication {
     }
 
     public ProducerRecord<String, String> createProducerRecord(final String line) {
-        return new ProducerRecord<>(this.topic, line);
+        ProducerRecord<String, String> record = new ProducerRecord<>(this.topic, line);
+        record.headers().add("createdAt", ByteUtils.longToBytes(System.nanoTime()));
+        return record;
     }
 
     public Future<RecordMetadata> sendEvent(final ProducerRecord<String, String> record) {

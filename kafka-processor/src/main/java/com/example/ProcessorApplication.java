@@ -41,12 +41,32 @@ public class ProcessorApplication {
             consumer.subscribe(topicNames);
             logger.info("Subscribed to topic {}", topicNames);
             while (true) {
-                final ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofSeconds(1));
+                final ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofMillis(10));
 
+                long maxLatency = 0L;
+                long recordSizeBytes = 0L;
+                long startTime = System.nanoTime();
                 for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
+                    Thread.sleep(1000);
                     writeToFile(consumerRecord);
+                    long currentLatency = getLatencyNanoSeconds(consumerRecord);
+                    if (currentLatency > maxLatency) {
+                        maxLatency = currentLatency;
+                    }
+                    recordSizeBytes += consumerRecord.serializedValueSize();
                 }
+                double throughputMB = 0.0;
+
+                if(consumerRecords.count() != 0) {
+                    long timeDuration = System.nanoTime() - startTime;
+
+                    throughputMB = ((double) recordSizeBytes * 1_000_000_000) / (1024 * timeDuration);
+                }
+                logger.info("Max latency: {}ms", maxLatency/1_000_000.0);
+                logger.info("Throughput : {}MB/s", throughputMB);
             }
+        } catch (Exception e) {
+            logger.error("Interrupted exception: ", e);
         } finally {
             logger.info("Closing consumer");
             consumer.close();
@@ -69,6 +89,13 @@ public class ProcessorApplication {
         }
     }
 
+    private static long getLatencyNanoSeconds(ConsumerRecord<String, String> consumerRecord) {
+        byte[] serializedValue = consumerRecord.headers().lastHeader("createdAt").value();
+        long createdAt = ByteUtils.bytesToLong(serializedValue);
+        long currentTime = System.nanoTime();
+        return currentTime - createdAt;
+    }
+
     private void ensureSinkFileExists() throws IOException {
         File file = new File(OUTPUT_FILE_PATH);
         file.createNewFile();
@@ -85,6 +112,7 @@ public class ProcessorApplication {
             put(VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             put(GROUP_ID_CONFIG,                 System.getenv().getOrDefault("GROUP_ID", "group-1"));
             put(AUTO_OFFSET_RESET_CONFIG,        "earliest");
+            put(MAX_POLL_RECORDS_CONFIG,        100);
         }};
 
 
