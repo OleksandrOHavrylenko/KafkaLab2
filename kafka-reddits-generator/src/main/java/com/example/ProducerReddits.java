@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.util.ByteUtils;
 import org.apache.kafka.clients.producer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

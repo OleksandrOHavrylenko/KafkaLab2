@@ -56,7 +56,8 @@ hs_err_pid*
 # User-specific stuff:
 .idea/
 .build/
-.gradle
+.gradle/
+input/
 
 # CMake
 cmake-build-debug/
