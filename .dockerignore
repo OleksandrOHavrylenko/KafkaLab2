@@ -57,7 +57,7 @@ hs_err_pid*
 .idea/
 .build/
 .gradle/
-input/
+#input/
 
 # CMake
 cmake-build-debug/

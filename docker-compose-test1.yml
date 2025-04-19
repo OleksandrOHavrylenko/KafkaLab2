@@ -1,0 +1,42 @@
+services:
+  producer-reddits:
+    image: producer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-generator
+    networks:
+      - kafka-net
+    environment:
+      OUTPUT_TOPIC: "subreddits"
+      INPUT_FILE: "full"
+    depends_on:
+      - report-reddits
+      - processor-reddits
+
+  processor-reddits:
+    image: processor-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-processor
+    networks:
+      - kafka-net
+    environment:
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      ENV TEST_NAME: "test1"
+
+
+  report-reddits:
+    image: report-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-report
+    networks:
+      - kafka-net
+    environment:
+      INPUT_TOPIC: "metric"
+
+networks:
+  kafka-net:
+    name: kafka-net
+    driver: bridge
