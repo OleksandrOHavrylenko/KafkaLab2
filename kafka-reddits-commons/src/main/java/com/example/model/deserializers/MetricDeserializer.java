@@ -3,13 +3,9 @@ package com.example.model.deserializers;
 import com.example.model.Metric;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.errors.SerializationException;
-import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.nio.ByteBuffer;
-import java.util.Map;
 
 /**
  * @author Oleksandr Havrylenko
