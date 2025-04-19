@@ -51,7 +51,7 @@ public class ConsumerReddits {
                 long startTime = System.nanoTime();
 
                 for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
-                    Thread.sleep(10);
+                    Thread.sleep(1000L);
 
                     writeToFile(consumerRecord);
 
@@ -62,14 +62,10 @@ public class ConsumerReddits {
                     recordSizeBytes += consumerRecord.serializedValueSize();
                 }
 
-                long timeDuration = 0L;
                 if (!consumerRecords.isEmpty()) {
-                    timeDuration = System.nanoTime() - startTime;
+                    producerMetrics.sendEvent(new Metric(testName, recordSizeBytes, startTime, System.nanoTime(), maxLatencyNanos));
                 }
 //                double throughputMB = ((double) recordSizeBytes * 1_000_000_000.0) / (1024 * timeDuration);
-
-                producerMetrics.sendEvent(new Metric(testName, recordSizeBytes, timeDuration, maxLatencyNanos));
-
             }
         } catch (Exception e) {
             logger.error("Interrupted exception: ", e);

@@ -12,40 +12,28 @@ import java.util.Map;
  **/
 public class MetricAnalyser {
     private static final Logger logger = LoggerFactory.getLogger(MetricAnalyser.class);
-    private final Map<String, Analysis> metrics;
+    private final Map<String, Analysis> analysisData;
 
     public MetricAnalyser() {
-        this.metrics = new HashMap<>();
+        this.analysisData = new HashMap<>();
     }
 
-    public void addMetric(final Metric metric) {
-        logger.info("New metric received: {}", metric);
-        if (metrics.containsKey(metric.testName())) {
-            Analysis currentData = metrics.get(metric.testName());
-
-            long durationNanos = currentData.durationNanos();
-            long sizeBytes = currentData.sizeBytes();
-            long latencyNanos = Math.max(currentData.maxLatencyNanos(), metric.latencyNanos());
-
-            metrics.put(metric.testName(), new Analysis(sizeBytes + metric.sizeBytes(), durationNanos + metric.durationNanos(), latencyNanos));
+    public void addMetric(final Metric newMetric) {
+        logger.info("New Metric received: {}", newMetric);
+        if (analysisData.containsKey(newMetric.testName())) {
+            analysisData.put(newMetric.testName(), new Analysis(analysisData.get(newMetric.testName()), newMetric.sizeBytes(), newMetric.finishTime(), newMetric.latencyNanos()));
         } else {
-            metrics.put(metric.testName(), new Analysis(metric.sizeBytes(), metric.durationNanos(), metric.latencyNanos()));
+            analysisData.put(newMetric.testName(),
+                    new Analysis(newMetric.sizeBytes(), newMetric.startTime(), newMetric.finishTime(), newMetric.latencyNanos()));
         }
         showReport();
     }
 
     private void showReport() {
-        metrics.forEach(this::showTestInfo);
+        analysisData.forEach(this::showTestInfo);
     }
 
     private void showTestInfo(final String testName, final Analysis analysis) {
-        long sizeBytes = analysis.sizeBytes();
-        long durationNanos = analysis.durationNanos();
-        double throughputMB = ((double) sizeBytes * 1_000_000_000.0) / (1024 * durationNanos);
-        double maxLatencyMillis = analysis.maxLatencyNanos() / 1_000_000.0;
-//        TODO remove after successful testing
-        logger.info("MaxLatency: {}", analysis.maxLatencyNanos() / 1_000_000);
-
-        logger.info("Test: {} - Throughput : {}MB/s, Max latency: {}ms", testName, throughputMB, maxLatencyMillis);
+        logger.info("Test: {} - Throughput : {}MB/s, Max latency: {}ms", testName, analysis.getThroughputMBs(), analysis.getMaxLatencyNanos());
     }
 }

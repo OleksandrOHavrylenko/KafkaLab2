@@ -25,7 +25,7 @@ public class ProcessorApplication {
             put(VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             put(GROUP_ID_CONFIG,                 System.getenv().getOrDefault("GROUP_ID", "group-1"));
             put(AUTO_OFFSET_RESET_CONFIG,        "earliest");
-            put(MAX_POLL_RECORDS_CONFIG,        100);
+            put(MAX_POLL_RECORDS_CONFIG,        3);
         }};
 
         final Properties producerProperties = new Properties() {{
