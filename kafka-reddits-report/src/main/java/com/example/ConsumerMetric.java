@@ -34,7 +34,7 @@ public class ConsumerMetric {
         logger.info("Subscribed to topics {}", topicNames);
 
         while (true) {
-            final ConsumerRecords<String, Metric> metricRecords = consumer.poll(Duration.ofMillis(500));
+            final ConsumerRecords<String, Metric> metricRecords = consumer.poll(Duration.ofSeconds(1));
 
             for (ConsumerRecord<String, Metric> metricRecord : metricRecords) {
                 metricAnalyser.addMetric(metricRecord.value());

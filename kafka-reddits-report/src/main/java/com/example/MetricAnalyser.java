@@ -20,6 +20,11 @@ public class MetricAnalyser {
 
     public void addMetric(final Metric newMetric) {
         logger.info("New Metric received: {}", newMetric);
+        double timeDuration = newMetric.finishTime() - newMetric.startTime();
+        double throughputMB = ((double) newMetric.sizeBytes() * 1_000_000_000.0) / (1024 * timeDuration);
+
+        logger.info("Current data for Test: {}: Throughput : {}MB/s, Max latency: {}ms", newMetric.testName(), throughputMB, newMetric.latencyNanos() / 1_000_000.0);
+
         if (analysisData.containsKey(newMetric.testName())) {
             analysisData.put(newMetric.testName(), new Analysis(analysisData.get(newMetric.testName()), newMetric.sizeBytes(), newMetric.finishTime(), newMetric.latencyNanos()));
         } else {
@@ -34,6 +39,8 @@ public class MetricAnalyser {
     }
 
     private void showTestInfo(final String testName, final Analysis analysis) {
-        logger.info("Test: {} - Throughput : {}MB/s, Max latency: {}ms", testName, analysis.getThroughputMBs(), analysis.getMaxLatencyNanos());
+        logger.info("Full report Test: {}: Throughput : {}MB/s, Max latency: {}ms, Max latency: {}s",
+                testName, analysis.getThroughputMBs(), analysis.getMaxLatencyNanos() / 1_000_000.0,
+                analysis.getMaxLatencyNanos() / 1_000_000_000.0);
     }
 }

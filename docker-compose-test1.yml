@@ -23,7 +23,7 @@ services:
     environment:
       INPUT_TOPIC: "subreddits"
       OUTPUT_TOPIC: "metric"
-      ENV TEST_NAME: "test1"
+      TEST_NAME: "test1: One producer, a topic with one partition, one consumer"
 
 
   report-reddits:

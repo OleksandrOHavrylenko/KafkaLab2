@@ -25,7 +25,7 @@ public class Analysis {
     }
 
     public double getThroughputMBs() {
-        return ((double) sizeBytes * 1_000_000_000.0) / (1024 * finishTime - startTime);
+        return ((double) sizeBytes * 1_000_000_000.0) / (1024 * (finishTime - startTime));
     }
 
     public long getSizeBytes() {
