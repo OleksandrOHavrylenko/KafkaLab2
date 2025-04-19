@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.model.Metric;
+import com.example.util.ByteUtils;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

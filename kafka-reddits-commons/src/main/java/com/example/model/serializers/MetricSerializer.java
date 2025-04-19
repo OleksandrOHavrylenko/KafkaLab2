@@ -1,6 +1,5 @@
 package com.example.model.serializers;
 
-import com.example.ConsumerReddits;
 import com.example.model.Metric;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.errors.SerializationException;

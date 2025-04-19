@@ -51,6 +51,6 @@ jar {
 }
 
 shadowJar {
-    archiveBaseName = "processor-reddit"
+    archiveBaseName = "report-reddit"
     archiveClassifier = ''
 }
