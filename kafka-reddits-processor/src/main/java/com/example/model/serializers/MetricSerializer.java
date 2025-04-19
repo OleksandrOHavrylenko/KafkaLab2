@@ -1,10 +1,13 @@
 package com.example.model.serializers;
 
+import com.example.ConsumerReddits;
 import com.example.model.Metric;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Serializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -12,6 +15,7 @@ import java.util.Map;
  * @author Oleksandr Havrylenko
  **/
 public class MetricSerializer implements Serializer<Metric> {
+    private static final Logger logger = LoggerFactory.getLogger(MetricSerializer.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -22,12 +26,13 @@ public class MetricSerializer implements Serializer<Metric> {
     public byte[] serialize(String topic, Metric data) {
         try {
             if (data == null){
-                System.out.println("Null received at serializing Metric object");
+                logger.info("Null received at serializing Metric object");
                 return null;
             }
-            System.out.println("Serializing Metric");
+            logger.debug("Serializing Metric");
             return objectMapper.writeValueAsBytes(data);
         } catch (Exception e) {
+            logger.error("Error when serializing Metric to byte[]", e);
             throw new SerializationException("Error when serializing Metric to byte[]");
         }
     }

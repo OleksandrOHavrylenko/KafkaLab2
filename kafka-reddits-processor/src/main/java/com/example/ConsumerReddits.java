@@ -50,7 +50,7 @@ public class ConsumerReddits {
                 long startTime = System.nanoTime();
 
                 for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
-                    Thread.sleep(1000);
+                    Thread.sleep(10);
 
                     writeToFile(consumerRecord);
 
@@ -61,8 +61,11 @@ public class ConsumerReddits {
                     recordSizeBytes += consumerRecord.serializedValueSize();
                 }
 
-                long timeDuration = System.nanoTime() - startTime;
-                double throughputMB = ((double) recordSizeBytes * 1_000_000_000.0) / (1024 * timeDuration);
+                long timeDuration = 0L;
+                if (!consumerRecords.isEmpty()) {
+                    timeDuration = System.nanoTime() - startTime;
+                }
+//                double throughputMB = ((double) recordSizeBytes * 1_000_000_000.0) / (1024 * timeDuration);
 
                 producerMetrics.sendEvent(new Metric(testName, recordSizeBytes, timeDuration, maxLatencyNanos));
 
