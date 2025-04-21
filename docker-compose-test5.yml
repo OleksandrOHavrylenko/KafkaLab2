@@ -12,10 +12,10 @@ services:
       INPUT_FILE: "full"
     depends_on:
       - report-reddits
-      - consumer-reddits
+      - consumer-reddits-1
 
-  consumer-reddits:
-    container_name: consumer-reddits
+  consumer-reddits-1:
+    container_name: consumer-reddits-1
     image: consumer-reddits
     build:
       context: .
@@ -23,10 +23,10 @@ services:
     networks:
       - kafka-net
     environment:
+      GROUP_ID: "subreddits-group-1"
       INPUT_TOPIC: "subreddits"
       OUTPUT_TOPIC: "metric"
-      TEST_NAME: "test1"
-
+      TEST_NAME: "test5"
 
   report-reddits:
     container_name: report-reddits

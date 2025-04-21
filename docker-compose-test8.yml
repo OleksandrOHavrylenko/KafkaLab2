@@ -1,0 +1,204 @@
+services:
+  producer-reddits-1:
+    container_name: producer-reddits-1
+    image: producer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-producer
+    networks:
+      - kafka-net
+    environment:
+      OUTPUT_TOPIC: "subreddits"
+      INPUT_FILE: "part1"
+    depends_on:
+      - report-reddits
+      - consumer-reddits-1
+      - consumer-reddits-2
+      - consumer-reddits-3
+      - consumer-reddits-4
+      - consumer-reddits-5
+      - consumer-reddits-6
+      - consumer-reddits-7
+      - consumer-reddits-8
+      - consumer-reddits-9
+      - consumer-reddits-10
+
+  producer-reddits-2:
+    container_name: producer-reddits-2
+    image: producer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-producer
+    networks:
+      - kafka-net
+    environment:
+      OUTPUT_TOPIC: "subreddits"
+      INPUT_FILE: "part2"
+    depends_on:
+      - report-reddits
+      - consumer-reddits-1
+      - consumer-reddits-2
+      - consumer-reddits-3
+      - consumer-reddits-4
+      - consumer-reddits-5
+      - consumer-reddits-6
+      - consumer-reddits-7
+      - consumer-reddits-8
+      - consumer-reddits-9
+      - consumer-reddits-10
+
+  consumer-reddits-1:
+    container_name: consumer-reddits-1
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-2:
+    container_name: consumer-reddits-2
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-3:
+    container_name: consumer-reddits-3
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-4:
+    container_name: consumer-reddits-4
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-5:
+    container_name: consumer-reddits-5
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-6:
+    container_name: consumer-reddits-6
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-7:
+    container_name: consumer-reddits-7
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-8:
+    container_name: consumer-reddits-8
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-9:
+    container_name: consumer-reddits-9
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  consumer-reddits-10:
+    container_name: consumer-reddits-10
+    image: consumer-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    networks:
+      - kafka-net
+    environment:
+      GROUP_ID: "subreddits-group-1"
+      INPUT_TOPIC: "subreddits"
+      OUTPUT_TOPIC: "metric"
+      TEST_NAME: "test8"
+
+  report-reddits:
+    container_name: report-reddits
+    image: report-reddits
+    build:
+      context: .
+      dockerfile: Dockerfile-report
+    networks:
+      - kafka-net
+    environment:
+      INPUT_TOPIC: "metric"
+
+networks:
+  kafka-net:
+    name: kafka-net
+    driver: bridge

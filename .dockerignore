@@ -1,4 +1,3 @@
-# Created by .ignore support plugin (hsz.mobi)
 ### macOS template
 # General
 .DS_Store
@@ -57,7 +56,8 @@ hs_err_pid*
 .idea/
 .build/
 .gradle/
-#input/
+scripts/
+docker-compose*.yml
 
 # CMake
 cmake-build-debug/

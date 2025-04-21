@@ -23,7 +23,10 @@ public class MetricAnalyser {
         double timeDuration = newMetric.finishTime() - newMetric.startTime();
         double throughputMB = ((double) newMetric.sizeBytes() * 1_000_000_000.0) / (1024 * timeDuration);
 
-        logger.info("Current data for Test: {}: Throughput : {}MB/s, Max latency: {}ms", newMetric.testName(), throughputMB, newMetric.latencyNanos() / 1_000_000.0);
+        logger.info("Current data for Test: {}: Throughput : {}MB/s, Max latency: {}ms",
+                newMetric.testName(),
+                String.format("%.03f", throughputMB),
+                String.format("%.03f", newMetric.latencyNanos() / 1_000_000.0));
 
         if (analysisData.containsKey(newMetric.testName())) {
             analysisData.put(newMetric.testName(), new Analysis(analysisData.get(newMetric.testName()), newMetric.sizeBytes(), newMetric.finishTime(), newMetric.latencyNanos()));
@@ -40,7 +43,9 @@ public class MetricAnalyser {
 
     private void showTestInfo(final String testName, final Analysis analysis) {
         logger.info("Full report Test: {}: Throughput : {}MB/s, Max latency: {}ms, Max latency: {}s",
-                testName, analysis.getThroughputMBs(), analysis.getMaxLatencyNanos() / 1_000_000.0,
-                analysis.getMaxLatencyNanos() / 1_000_000_000.0);
+                testName,
+                String.format("%.03f", analysis.getThroughputMBs()),
+                String.format("%.03f", analysis.getMaxLatencyNanos() / 1_000_000.0),
+                String.format("%.03f", analysis.getMaxLatencyNanos() / 1_000_000_000.0));
     }
 }
