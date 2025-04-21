@@ -7,7 +7,7 @@ docker-compose -f docker-compose-kafka-kraft.yml up -d
 ### 2 Run script corresponding to the test
 
 ```Shell
-cd ./scripts/test1.sh
+ ./scripts/test1.sh
 ```
 
 ### 3 Start docker-compose file corresponding to the test
@@ -20,6 +20,12 @@ docker-compose -f docker-compose-test1.yml up -d && docker-compose rm -f
 
 ```Shell
 docker logs report-reddits --follow
+```
+
+### 5 Remove Kafka consumer groups and topics after test.
+
+```Shell
+./scripts/clean.sh
 ```
 ##### Tests
 1. One producer, a topic with 1 partition, 1 consumer

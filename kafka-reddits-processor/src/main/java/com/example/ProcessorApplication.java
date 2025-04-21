@@ -23,7 +23,7 @@ public class ProcessorApplication {
                     .getOrDefault("BOOTSTRAP_SERVERS", "broker-1:19092, broker-2:19092, broker-3:19092"));
             put(KEY_DESERIALIZER_CLASS_CONFIG,   StringDeserializer.class);
             put(VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-            put(GROUP_ID_CONFIG,                 System.getenv().getOrDefault("GROUP_ID", "group-1"));
+            put(GROUP_ID_CONFIG,                 System.getenv().getOrDefault("GROUP_ID", "subreddits-group-1"));
             put(AUTO_OFFSET_RESET_CONFIG,        "earliest");
             put(MAX_POLL_RECORDS_CONFIG,        1);
         }};

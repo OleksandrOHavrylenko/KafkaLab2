@@ -21,18 +21,18 @@ public class MetricAnalyser {
     public void addMetric(final Metric newMetric) {
         logger.info("New Metric received: {}", newMetric);
         double timeDuration = newMetric.finishTime() - newMetric.startTime();
-        double throughputMB = ((double) newMetric.sizeBytes() * 1_000_000_000.0) / (1024 * timeDuration);
+        double throughputMbps = ((double) newMetric.sizeBytes() * 8 * 1_000_000_000.0) / (1024 * timeDuration);
 
-        logger.info("Current data for Test: {}: Throughput : {}MB/s, Max latency: {}ms",
+        logger.info("Current data for Test: {}: Throughput : {}Mbps, Max latency: {}ms",
                 newMetric.testName(),
-                String.format("%.03f", throughputMB),
+                String.format("%.03f", throughputMbps),
                 String.format("%.03f", newMetric.latencyNanos() / 1_000_000.0));
 
         if (reportData.containsKey(newMetric.testName())) {
-            reportData.put(newMetric.testName(), new ReportLine(reportData.get(newMetric.testName()), newMetric.sizeBytes(), newMetric.finishTime(), newMetric.latencyNanos()));
+            reportData.put(newMetric.testName(), new ReportLine(reportData.get(newMetric.testName()), newMetric.sizeBytes() * 8L, newMetric.finishTime(), newMetric.latencyNanos()));
         } else {
             reportData.put(newMetric.testName(),
-                    new ReportLine(newMetric.sizeBytes(), newMetric.startTime(), newMetric.finishTime(), newMetric.latencyNanos()));
+                    new ReportLine(newMetric.sizeBytes() * 8L, newMetric.startTime(), newMetric.finishTime(), newMetric.latencyNanos()));
         }
         showReport();
     }
@@ -42,9 +42,9 @@ public class MetricAnalyser {
     }
 
     private void showTestInfo(final String testName, final ReportLine reportLine) {
-        logger.info("Full report Test: {}: Throughput : {}MB/s, Max latency: {}ms, Max latency: {}s",
+        logger.info("Full report Test: {}: Throughput : {}Mbps, Max latency: {}ms, Max latency: {}s",
                 testName,
-                String.format("%.03f", reportLine.getThroughputMBs()),
+                String.format("%.03f", reportLine.getThroughputMbps()),
                 String.format("%.03f", reportLine.getMaxLatencyNanos() / 1_000_000.0),
                 String.format("%.03f", reportLine.getMaxLatencyNanos() / 1_000_000_000.0));
     }

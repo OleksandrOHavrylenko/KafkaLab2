@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=build /app/kafka-reddits-report/build/libs/*.jar report-reddit.jar
 
 ENV BOOTSTRAP_SERVERS="broker-1:19092, broker-2:19092, broker-3:19092"
-ENV GROUP_ID="group-metric-1"
+ENV GROUP_ID="metric-group-1"
 ENV INPUT_TOPIC="metric"
 
 # Run the application
