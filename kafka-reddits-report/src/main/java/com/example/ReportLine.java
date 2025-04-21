@@ -3,20 +3,20 @@ package com.example;
 /**
  * @author Oleksandr Havrylenko
  **/
-public class Analysis {
+public class ReportLine {
     final private long sizeBytes;
     final private long startTime;
     final private long finishTime;
     final private long maxLatencyNanos;
 
-    public Analysis(long sizeBytes, long startTime, long finishTime, long maxLatencyNanos) {
+    public ReportLine(long sizeBytes, long startTime, long finishTime, long maxLatencyNanos) {
         this.sizeBytes = sizeBytes;
         this.startTime = startTime;
         this.finishTime = finishTime;
         this.maxLatencyNanos = maxLatencyNanos;
     }
 
-    public Analysis(Analysis currentData, long sizeBytes, long finishTime, long latencyNanos) {
+    public ReportLine(ReportLine currentData, long sizeBytes, long finishTime, long latencyNanos) {
         this(currentData.getSizeBytes() + sizeBytes,
                 currentData.getStartTime(),
                 Math.max(currentData.getFinishTime(), finishTime),
